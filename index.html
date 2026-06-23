@@ -4,98 +4,102 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Preparatore Orto-Reumato</title>
-
 <style>
-body{
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:#0f1720;
-color:white;
-margin:0;
-padding:20px;
-}
-
-.card{
-background:#17212d;
-padding:20px;
-border-radius:16px;
-margin-bottom:15px;
-}
-
-h1{
-margin-top:0;
-}
-
-button{
-padding:12px;
-border:none;
-border-radius:12px;
-background:#8ecae6;
-font-weight:bold;
-width:100%;
-margin-top:10px;
-}
-
-.flash{
-font-size:22px;
-text-align:center;
-padding:40px 10px;
-}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f1720;color:white;margin:0;padding:16px;padding-bottom:90px}
+.card{background:#17212d;padding:18px;border-radius:18px;margin-bottom:14px}
+button{padding:12px;border:none;border-radius:14px;background:#8ecae6;font-weight:bold;margin:4px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#101923;display:flex;justify-content:space-around;padding:10px}
+.nav button{background:#233244;color:white}
+.flash{font-size:23px;text-align:center;padding:45px 10px}
+.killer{border-left:4px solid #ff6b6b;padding-left:10px}
+.ok{border-left:4px solid #80ed99;padding-left:10px}
 </style>
-
 </head>
 <body>
 
-<div class="card">
-<h1>Preparatore Orale Orto-Reumato</h1>
-<p>Versione mobile personale.</p>
-</div>
+<div id="app"></div>
 
-<div class="card">
-<h2>Argomenti Tier S</h2>
-<ul>
-<li>DCA</li>
-<li>Scoliosi</li>
-<li>Gonartrosi</li>
-<li>Artrite Reumatoide</li>
-<li>Artrite Psoriasica</li>
-<li>LES</li>
-<li>Sclerosi Sistemica</li>
-<li>Behçet</li>
-</ul>
-</div>
-
-<div class="card">
-<h2>Flashcard Demo</h2>
-
-<div class="flash" id="card">
-Ortolani?
-</div>
-
-<button onclick="flipCard()">
-Mostra risposta
-</button>
-
+<div class="nav">
+<button onclick="home()">Home</button>
+<button onclick="manuale()">Manuale</button>
+<button onclick="flash()">Flash</button>
+<button onclick="prof()">Prof</button>
+<button onclick="errori()">Errori</button>
 </div>
 
 <script>
+const topics=[
+["DCA","Ortolani riduce, Barlow lussa. Eco-Graf nei primi mesi, RX dopo il sesto mese. Putti, limbus, Pavlik, coxartrosi.","Limbus = cercine acetabolare deformato/fibrotico che ostacola la riduzione."],
+["Scoliosi","Cobb >10° + rotazione vertebrale. Adams evidenzia il gibbo. Risser valuta maturità scheletrica.","Atteggiamento scoliotico: non c’è rotazione vertebrale."],
+["Gonartrosi","Dolore meccanico, compartimento mediale, varo-mediale, valgo-laterale. RX: rima ridotta, osteofiti, geodi, sclerosi.","Varo sovraccarica compartimento mediale; valgo quello laterale."],
+["Perthes","Bambino 4-8 anni, zoppia, necrosi ischemica testa femorale. Catterall/Herring. Coxa plana e coxartrosi.","DD epifisiolisi: Perthes 4-8 anni; epifisiolisi adolescente obeso."],
+["Epifisiolisi","Adolescente maschio obeso, dolore anche al ginocchio, RX AP + Lauenstein, Southwick, rischio osteonecrosi.","Southwick: lieve <30°, moderata 30-60°, grave >60°."],
+["Artrite Reumatoide","Sinovite simmetrica MCP/PIP/polsi, DIP risparmiate, anti-CCP, metotrexato + acido folico.","Anti-CCP più specifici del FR."],
+["Artrite Psoriasica","Dattilite, entesite, DIP, pitting. CASPAR. Anti-TNF/anti-IL17.","Forma più frequente: oligoartrite asimmetrica."],
+["LES","ANA sensibili; anti-dsDNA/Sm specifici; complemento basso; rene prognostico; idrossiclorochina.","Complemento basso per consumo da immunocomplessi."],
+["Sclerosi Sistemica","Raynaud; limitata anti-centromero; diffusa anti-Scl70; polmone e crisi renale; ACE-inibitori.","Terapia crisi renale sclerodermica: ACE-inibitori."],
+["Behçet","Afte orali, ulcere genitali, uveite. HLA-B51. Arterie e vene di ogni calibro. Patergia.","Non dire solo venule: colpisce arterie e vene di ogni calibro."],
+["Spondilite Anchilosante","Lombalgia infiammatoria, sacroileite, HLA-B27, RM precoce, uveite, FANS/anti-TNF.","HLA-B27 associato ma non diagnostico."],
+["PMR/Horton","PMR: dolore/rigidità cingoli, VES alta, steroidi. Horton: cefalea, claudicatio mandibolare, cecità, steroidi subito.","In Horton non aspettare biopsia: steroidi subito per prevenire cecità."],
+["Sjögren","Sindrome sicca, SSA/SSB, Schirmer, biopsia ghiandole salivari, rischio linfoma MALT.","Complicanza: linfoma MALT."],
+["Dermatomiosite","Debolezza prossimale, non dolore. CPK alta. Rash eliotropo, Gottron, neoplasie.","Dermatomiosite impone ricerca di neoplasia."]
+];
 
-let stato=0;
+const cards=[
+["Ortolani?","Riduce un’anca lussata."],
+["Barlow?","Lussa un’anca instabile."],
+["Cos’è il limbus?","Cercine acetabolare deformato/fibrotico."],
+["Cobb?","Misura l’angolo della scoliosi."],
+["Risser 0 o 5?","Risser 0."],
+["Anti-CCP?","Più specifici del FR."],
+["DIP nell’AR?","Risparmiate."],
+["Dattilite?","Dito a salsicciotto."],
+["Complemento nel LES attivo?","Basso."],
+["Vasi Behçet?","Arterie e vene di qualsiasi calibro."],
+["Terapia crisi renale sclerodermica?","ACE-inibitori."],
+["Horton: perché steroidi subito?","Per prevenire cecità irreversibile."],
+["Sjögren complicanza?","Linfoma MALT."],
+["Farmaco che costruisce osso?","Teriparatide."]
+];
 
-function flipCard(){
+let i=0, flipped=false;
+let errors=JSON.parse(localStorage.getItem("errors")||"[]");
 
-if(stato===0){
-document.getElementById("card").innerHTML=
-"Riduce un'anca lussata";
-stato=1;
+function save(){localStorage.setItem("errors",JSON.stringify(errors))}
+function addError(x){errors.push(x);save();alert("Aggiunto agli errori")}
+
+function home(){
+app.innerHTML=`<div class="card"><h1>Preparatore Orale Orto-Reumato</h1><p>Manuale, flashcard, simulazioni e Error Book.</p></div>
+<div class="card"><h2>Ultimi 3 giorni</h2><p><b>Giorno 1:</b> DCA, scoliosi, gonartrosi, Perthes, epifisiolisi.</p><p><b>Giorno 2:</b> AR, AP, LES, sclerosi sistemica, Behçet.</p><p><b>Giorno 3:</b> solo simulazioni + Error Book.</p></div>`;
 }
-else{
-document.getElementById("card").innerHTML=
-"Ortolani?";
-stato=0;
+
+function manuale(){
+app.innerHTML="<div class='card'><h1>Manuale Orale</h1></div>"+topics.map(t=>`<div class="card"><h2>${t[0]}</h2><p class="ok">${t[1]}</p><p class="killer"><b>Trabocchetto:</b> ${t[2]}</p><button onclick="addError('${t[0]}')">Segna debole</button></div>`).join("");
 }
 
+function flash(){
+flipped=false;
+showCard();
 }
 
+function showCard(){
+app.innerHTML=`<div class="card"><h1>Flashcard</h1><p>${i+1}/${cards.length}</p><div class="flash" onclick="flip()">${flipped?cards[i][1]:cards[i][0]}</div><button onclick="prev()">←</button><button onclick="flip()">Mostra</button><button onclick="next()">→</button><button onclick="addError(cards[i][0])">Non la so</button></div>`;
+}
+
+function flip(){flipped=!flipped;showCard()}
+function next(){i=(i+1)%cards.length;flipped=false;showCard()}
+function prev(){i=(i-1+cards.length)%cards.length;flipped=false;showCard()}
+
+function prof(){
+let t=topics[Math.floor(Math.random()*topics.length)];
+app.innerHTML=`<div class="card"><h1>Modalità Professore</h1><p>Rispondi a voce per 90 secondi.</p><h2>Mi parli di: ${t[0]}</h2><details><summary>Risposta breve</summary><p>${t[1]}</p></details><details><summary>Trabocchetto</summary><p>${t[2]}</p></details><button onclick="prof()">Nuova domanda</button><button onclick="addError('Simulazione: ${t[0]}')">Segna debole</button></div>`;
+}
+
+function errori(){
+app.innerHTML="<div class='card'><h1>Error Book</h1><button onclick='errors=[];save();errori()'>Svuota</button></div>"+(errors.length?errors.map((e,n)=>`<div class="card killer">${n+1}. ${e}</div>`).join(""):"<div class='card'>Nessun errore salvato.</div>");
+}
+
+home();
 </script>
 
 </body>
