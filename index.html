@@ -3,103 +3,773 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preparatore Orto-Reumato</title>
+<title>Preparatore Orto-Reumato V2</title>
+
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0f1720;color:white;margin:0;padding:16px;padding-bottom:90px}
-.card{background:#17212d;padding:18px;border-radius:18px;margin-bottom:14px}
-button{padding:12px;border:none;border-radius:14px;background:#8ecae6;font-weight:bold;margin:4px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#101923;display:flex;justify-content:space-around;padding:10px}
-.nav button{background:#233244;color:white}
-.flash{font-size:23px;text-align:center;padding:45px 10px}
-.killer{border-left:4px solid #ff6b6b;padding-left:10px}
-.ok{border-left:4px solid #80ed99;padding-left:10px}
+:root{
+--bg:#0b111a;
+--card:#151f2c;
+--card2:#1d2a3a;
+--text:#f8fafc;
+--muted:#a7b0bd;
+--blue:#8ecae6;
+--yellow:#ffb703;
+--red:#ff6b6b;
+--green:#80ed99;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif;
+background:linear-gradient(180deg,#0b111a,#111827);
+color:var(--text);
+padding:14px;
+padding-bottom:95px;
+}
+
+h1,h2,h3{margin-top:0}
+p{line-height:1.45}
+
+.card{
+background:var(--card);
+border:1px solid rgba(255,255,255,.08);
+border-radius:20px;
+padding:18px;
+margin-bottom:14px;
+box-shadow:0 10px 25px rgba(0,0,0,.22);
+}
+
+.hero{
+background:linear-gradient(135deg,#1d3557,#284b63);
+}
+
+.badge{
+display:inline-block;
+padding:5px 9px;
+border-radius:999px;
+font-size:12px;
+margin:3px;
+background:rgba(142,202,230,.15);
+color:var(--blue);
+}
+
+.tierS{background:rgba(255,107,107,.18);color:#ffb3b3}
+.tierA{background:rgba(255,183,3,.18);color:#ffd166}
+.tierB{background:rgba(128,237,153,.16);color:#b8f7c8}
+
+button{
+border:none;
+border-radius:14px;
+padding:12px 14px;
+margin:4px;
+font-weight:800;
+font-size:15px;
+background:#26364a;
+color:white;
+}
+
+button.primary{background:var(--blue);color:#071018}
+button.warn{background:var(--yellow);color:#2a1900}
+button.red{background:var(--red);color:#240808}
+button.green{background:var(--green);color:#062012}
+
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0c141f;
+border-top:1px solid rgba(255,255,255,.08);
+display:grid;
+grid-template-columns:repeat(5,1fr);
+padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+z-index:10;
+}
+
+.nav button{
+background:transparent;
+color:var(--muted);
+font-size:11px;
+padding:8px 2px;
+}
+
+.nav button.active{
+background:#223044;
+color:white;
+}
+
+.ok{
+border-left:4px solid var(--green);
+padding-left:12px;
+}
+
+.killer{
+border-left:4px solid var(--red);
+padding-left:12px;
+}
+
+.flash{
+min-height:260px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:24px;
+line-height:1.35;
+white-space:pre-wrap;
+}
+
+input{
+width:100%;
+padding:13px;
+border-radius:14px;
+background:#0d1520;
+color:white;
+border:1px solid rgba(255,255,255,.12);
+font-size:16px;
+margin-bottom:12px;
+}
+
+details{
+background:#101923;
+border-radius:15px;
+padding:12px;
+margin-top:8px;
+}
+
+summary{
+font-weight:900;
+color:var(--yellow);
+}
+
+.small{color:var(--muted);font-size:13px}
+
+.progress{
+height:12px;
+background:#26364a;
+border-radius:999px;
+overflow:hidden;
+}
+
+.progress div{
+height:100%;
+background:var(--blue);
+width:0%;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr;
+gap:10px;
+}
 </style>
 </head>
+
 <body>
 
 <div id="app"></div>
 
 <div class="nav">
-<button onclick="home()">Home</button>
-<button onclick="manuale()">Manuale</button>
-<button onclick="flash()">Flash</button>
-<button onclick="prof()">Prof</button>
-<button onclick="errori()">Errori</button>
+<button onclick="go('home')" id="n-home">Home</button>
+<button onclick="go('manuale')" id="n-manuale">Manuale</button>
+<button onclick="go('flash')" id="n-flash">Flash</button>
+<button onclick="go('prof')" id="n-prof">Prof</button>
+<button onclick="go('errori')" id="n-errori">Errori</button>
 </div>
 
 <script>
 const topics=[
-["DCA","Ortolani riduce, Barlow lussa. Eco-Graf nei primi mesi, RX dopo il sesto mese. Putti, limbus, Pavlik, coxartrosi.","Limbus = cercine acetabolare deformato/fibrotico che ostacola la riduzione."],
-["Scoliosi","Cobb >10° + rotazione vertebrale. Adams evidenzia il gibbo. Risser valuta maturità scheletrica.","Atteggiamento scoliotico: non c’è rotazione vertebrale."],
-["Gonartrosi","Dolore meccanico, compartimento mediale, varo-mediale, valgo-laterale. RX: rima ridotta, osteofiti, geodi, sclerosi.","Varo sovraccarica compartimento mediale; valgo quello laterale."],
-["Perthes","Bambino 4-8 anni, zoppia, necrosi ischemica testa femorale. Catterall/Herring. Coxa plana e coxartrosi.","DD epifisiolisi: Perthes 4-8 anni; epifisiolisi adolescente obeso."],
-["Epifisiolisi","Adolescente maschio obeso, dolore anche al ginocchio, RX AP + Lauenstein, Southwick, rischio osteonecrosi.","Southwick: lieve <30°, moderata 30-60°, grave >60°."],
-["Artrite Reumatoide","Sinovite simmetrica MCP/PIP/polsi, DIP risparmiate, anti-CCP, metotrexato + acido folico.","Anti-CCP più specifici del FR."],
-["Artrite Psoriasica","Dattilite, entesite, DIP, pitting. CASPAR. Anti-TNF/anti-IL17.","Forma più frequente: oligoartrite asimmetrica."],
-["LES","ANA sensibili; anti-dsDNA/Sm specifici; complemento basso; rene prognostico; idrossiclorochina.","Complemento basso per consumo da immunocomplessi."],
-["Sclerosi Sistemica","Raynaud; limitata anti-centromero; diffusa anti-Scl70; polmone e crisi renale; ACE-inibitori.","Terapia crisi renale sclerodermica: ACE-inibitori."],
-["Behçet","Afte orali, ulcere genitali, uveite. HLA-B51. Arterie e vene di ogni calibro. Patergia.","Non dire solo venule: colpisce arterie e vene di ogni calibro."],
-["Spondilite Anchilosante","Lombalgia infiammatoria, sacroileite, HLA-B27, RM precoce, uveite, FANS/anti-TNF.","HLA-B27 associato ma non diagnostico."],
-["PMR/Horton","PMR: dolore/rigidità cingoli, VES alta, steroidi. Horton: cefalea, claudicatio mandibolare, cecità, steroidi subito.","In Horton non aspettare biopsia: steroidi subito per prevenire cecità."],
-["Sjögren","Sindrome sicca, SSA/SSB, Schirmer, biopsia ghiandole salivari, rischio linfoma MALT.","Complicanza: linfoma MALT."],
-["Dermatomiosite","Debolezza prossimale, non dolore. CPK alta. Rash eliotropo, Gottron, neoplasie.","Dermatomiosite impone ricerca di neoplasia."]
+{
+area:"Ortopedia",tier:"S",title:"DCA",
+short:"Ortolani riduce, Barlow lussa. Diagnosi precoce con ecografia secondo Graf; RX dopo il sesto mese. Da sapere: Putti, limbus, Pavlik e coxartrosi precoce.",
+oral:"La displasia congenita dell’anca è un’anomalia dello sviluppo coxo-femorale con alterazioni di acetabolo, testa femorale e strutture capsulo-legamentose. Può determinare instabilità, sublussazione o lussazione. La diagnosi si basa su Ortolani, Barlow ed ecografia secondo Graf; dopo il sesto mese si usa anche la radiografia. La terapia mira a centrare la testa femorale nell’acetabolo, con tutori nelle forme precoci e riduzione chirurgica nelle forme tardive.",
+killer:"Limbus = cercine acetabolare deformato/fibrotico che ostacola la riduzione.",
+questions:["Ortolani?","Barlow?","Graf?","Triade di Putti?","Limbus?","Quando RX?","Complicanza tardiva?"]
+},
+{
+area:"Ortopedia",tier:"S",title:"Scoliosi",
+short:"Cobb >10° + rotazione vertebrale. Adams evidenzia il gibbo. Risser valuta maturità scheletrica e rischio evolutivo.",
+oral:"La scoliosi è una deformità tridimensionale del rachide caratterizzata da deviazione laterale e rotazione vertebrale. Si definisce scoliosi una curva con Cobb superiore a 10°. Clinicamente si evidenzia con il test di Adams e il gibbo costale. La diagnosi si conferma con RX in ortostatismo, misurando Cobb e Risser. Il trattamento varia da osservazione a corsetto fino alla chirurgia.",
+killer:"Atteggiamento scoliotico: non c’è rotazione vertebrale; nella scoliosi vera sì.",
+questions:["Cos’è il gibbo?","Adams?","Cobb?","Risser?","Risser 0 o 5?","Quando corsetto?","Quando chirurgia?"]
+},
+{
+area:"Ortopedia",tier:"S",title:"Gonartrosi",
+short:"Dolore meccanico, compartimento mediale, varo-mediale, valgo-laterale. RX: rima ridotta, osteofiti, geodi, sclerosi.",
+oral:"La gonartrosi è una patologia degenerativa del ginocchio caratterizzata da perdita cartilaginea, rimodellamento subcondrale e osteofiti. Clinicamente dà dolore meccanico, rigidità breve e limitazione funzionale. La diagnosi è radiografica, preferibilmente sotto carico. Il trattamento è conservativo nelle forme lievi e protesico nelle forme avanzate.",
+killer:"Varo sovraccarica il compartimento mediale; valgo quello laterale.",
+questions:["Dolore meccanico o infiammatorio?","Compartimento più colpito?","Geodi?","Osteofiti?","Quando protesi?"]
+},
+{
+area:"Ortopedia",tier:"A",title:"Coxartrosi",
+short:"Dolore inguinale, intrarotazione limitata precocemente. Cause secondarie: DCA, Perthes, epifisiolisi, necrosi, traumi.",
+oral:"La coxartrosi è l’artrosi dell’anca. Può essere primaria o secondaria a DCA, Perthes, epifisiolisi o necrosi della testa femorale. Si manifesta con dolore inguinale, limitazione funzionale e riduzione precoce dell’intrarotazione. La diagnosi è radiografica e nelle forme avanzate si ricorre all’artroprotesi totale d’anca.",
+killer:"Il dolore tipico della coxartrosi è inguinale, non gluteo come prima risposta.",
+questions:["Dove fa male?","Movimento limitato prima?","Cause secondarie?","Quando protesi?"]
+},
+{
+area:"Ortopedia",tier:"A",title:"Perthes",
+short:"Bambino 4-8 anni, zoppia, necrosi ischemica della testa femorale. Classificazioni: Catterall e Herring. Complicanza: coxa plana.",
+oral:"La malattia di Perthes è una necrosi ischemica idiopatica della testa femorale, tipica del bambino tra 4 e 8 anni. Si manifesta con zoppia e dolore all’anca o al ginocchio. La diagnosi è radiografica e la prognosi si valuta con Catterall e Herring. L’obiettivo terapeutico è mantenere la testa femorale centrata per prevenire coxa plana e coxartrosi precoce.",
+killer:"Perthes 4-8 anni; epifisiolisi adolescenza. Non confonderle.",
+questions:["Età?","Sintomo principale?","Catterall?","Herring?","Coxa plana?","Differenza con epifisiolisi?"]
+},
+{
+area:"Ortopedia",tier:"A",title:"Epifisiolisi",
+short:"Adolescente maschio obeso, dolore anche al ginocchio, RX AP + Lauenstein, Southwick, rischio osteonecrosi.",
+oral:"L’epifisiolisi è lo scivolamento della testa femorale attraverso la cartilagine di accrescimento. Colpisce tipicamente adolescenti maschi obesi con zoppia e dolore all’anca o al ginocchio. La diagnosi si basa su RX AP e Lauenstein; la gravità su Southwick. La terapia è chirurgica per prevenire osteonecrosi, condrolisi e coxartrosi.",
+killer:"Dolore al ginocchio nell’adolescente obeso può essere epifisiolisi dell’anca.",
+questions:["Paziente tipico?","Lauenstein?","Southwick?","Dunn?","Complicanza più temuta?"]
+},
+{
+area:"Ortopedia",tier:"A",title:"Piede torto congenito",
+short:"Equino-varo-addotto. Diagnosi clinica. Metodo Ponseti: CAVE. Tutore Denis-Brown.",
+oral:"Il piede torto congenito è una deformità tridimensionale del piede presente alla nascita. La forma più frequente è equino-varo-addotta. La diagnosi è clinica. Il trattamento precoce si basa sul metodo Ponseti, con correzione progressiva di cavismo, adduzione, varismo ed equinismo, seguita da tutore di Denis-Brown.",
+killer:"Ultima deformità corretta nel Ponseti: equinismo.",
+questions:["CAVE?","Forma più frequente?","Ponseti?","Denis-Brown?","Ultima deformità corretta?"]
+},
+{
+area:"Ortopedia/Reumatologia",tier:"A",title:"Osteoporosi",
+short:"DEXA, T-score ≤ -2,5. Bisfosfonati e denosumab anti-riassorbitivi; teriparatide anabolizzante.",
+oral:"L’osteoporosi è una malattia sistemica dello scheletro caratterizzata da riduzione della massa ossea e alterazione microarchitetturale, con aumento del rischio di fratture. La diagnosi si basa su DEXA e T-score. La terapia comprende vitamina D, calcio, bisfosfonati, denosumab e farmaci anabolizzanti come teriparatide.",
+killer:"Il farmaco che costruisce osso è teriparatide, non bisfosfonati.",
+questions:["T-score?","Z-score?","DEXA?","FRAX?","Denosumab?","Teriparatide?"]
+},
+{
+area:"Ortopedia",tier:"B",title:"Osteomielite e Morbo di Pott",
+short:"S. aureus, via ematogena nel bambino, metafisi, RM. Cronica: sequestro/fistole. Pott: TB vertebrale.",
+oral:"L’osteomielite è un’infezione dell’osso, acuta o cronica, più spesso da Staphylococcus aureus. Nel bambino è tipicamente ematogena e metafisaria. La RM è l’esame più sensibile. Nelle forme croniche compaiono sequestro e fistole. Il Morbo di Pott è la spondilodiscite tubercolare.",
+killer:"RX precoce può essere normale; RM molto più sensibile.",
+questions:["Germe più frequente?","Via nel bambino?","RM?","Sequestro?","Morbo di Pott?"]
+},
+{
+area:"Ortopedia",tier:"B",title:"Torcicollo congenito",
+short:"Retrattura dello sternocleidomastoideo: testa verso lato malato, mento verso lato sano. Terapia: fisioterapia.",
+oral:"Il torcicollo muscolare congenito è una retrazione fibrotica dello sternocleidomastoideo. La testa si inclina verso il lato affetto e il mento ruota verso il lato opposto. La diagnosi è clinica e la terapia iniziale è fisioterapica.",
+killer:"Testa verso lato malato, mento verso lato sano.",
+questions:["Muscolo coinvolto?","Posizione testa?","Complicanza?","Terapia?"]
+},{
+area:"Reumatologia",tier:"S",title:"Artrite Reumatoide",
+short:"Sinovite simmetrica MCP/PIP/polsi, DIP risparmiate, anti-CCP, metotrexato + acido folico.",
+oral:"L’artrite reumatoide è una malattia autoimmune cronica sistemica caratterizzata da sinovite infiammatoria persistente, che porta a erosioni e deformità. Colpisce simmetricamente piccole articolazioni di mani e piedi, soprattutto MCP, PIP e polsi, risparmiando di solito le DIP. Gli autoanticorpi principali sono fattore reumatoide e anti-CCP. La terapia di prima linea è il metotrexato, associato ad acido folico.",
+killer:"Anti-CCP più specifici del FR. Le DIP sono generalmente risparmiate.",
+questions:["Articolazioni colpite?","DIP?","FR?","Anti-CCP?","Pannus?","Metotrexato?","Acido folico?"]
+},
+{
+area:"Reumatologia",tier:"S",title:"Artrite Psoriasica",
+short:"Dattilite, entesite, DIP, pitting. CASPAR. Anti-TNF e anti-IL17.",
+oral:"L’artrite psoriasica è una spondiloartrite infiammatoria associata alla psoriasi. Può presentarsi come oligoartrite asimmetrica, poliartrite, coinvolgimento delle DIP, forma assiale o artrite mutilante. Elementi tipici sono dattilite, entesite e alterazioni ungueali. La diagnosi è clinica e supportata dai criteri CASPAR. La terapia comprende FANS, DMARDs e biologici.",
+killer:"La forma più frequente è oligoartrite asimmetrica; non dire subito forma assiale.",
+questions:["Dattilite?","Entesite?","DIP?","Pitting?","Pencil-in-cup?","CASPAR?","Anti-IL17?"]
+},
+{
+area:"Reumatologia",tier:"S",title:"LES",
+short:"ANA sensibili; anti-dsDNA/Sm specifici; complemento basso; rene prognostico; idrossiclorochina.",
+oral:"Il lupus eritematoso sistemico è una malattia autoimmune sistemica caratterizzata dalla formazione di autoanticorpi e immunocomplessi con possibile danno multiorgano. Colpisce soprattutto donne giovani. Gli ANA sono molto sensibili, mentre anti-dsDNA e anti-Sm sono più specifici. Il complemento si riduce nelle fasi attive per consumo. Il coinvolgimento renale è uno dei principali fattori prognostici. La terapia comprende idrossiclorochina, corticosteroidi e immunosoppressori.",
+killer:"Complemento basso per consumo da immunocomplessi. Rene = organo prognosticamente fondamentale.",
+questions:["ANA?","Anti-dsDNA?","Anti-Sm?","Complemento?","Nefrite?","APS?","SSA/SSB in gravidanza?","Idrossiclorochina?"]
+},
+{
+area:"Reumatologia",tier:"S",title:"Sclerosi Sistemica",
+short:"Raynaud; forma limitata anti-centromero; forma diffusa anti-Scl70; polmone e crisi renale; ACE-inibitori.",
+oral:"La sclerosi sistemica è una malattia autoimmune caratterizzata da vasculopatia, attivazione immunitaria e fibrosi progressiva di cute e organi interni. Il Raynaud è spesso l’esordio. Si distinguono forma limitata, associata ad anti-centromero, e forma diffusa, associata ad anti-Scl70. Le complicanze principali coinvolgono polmone, esofago e rene. La crisi renale sclerodermica si tratta con ACE-inibitori.",
+killer:"Crisi renale sclerodermica: terapia con ACE-inibitori.",
+questions:["Raynaud?","Tricromia?","Anti-centromero?","Anti-Scl70?","CREST?","Polmone?","Crisi renale?"]
+},
+{
+area:"Reumatologia",tier:"S",title:"Behçet",
+short:"Afte orali, ulcere genitali, uveite. HLA-B51. Arterie e vene di ogni calibro. Patergia.",
+oral:"La malattia di Behçet è una vasculite sistemica cronica recidivante caratterizzata da afte orali, ulcere genitali, uveite e manifestazioni cutanee, neurologiche e vascolari. È associata all’HLA-B51. Può colpire arterie e vene di qualsiasi calibro. La diagnosi è clinica; il test di patergia può essere positivo. La terapia varia da colchicina a immunosoppressori e anti-TNF nelle forme severe.",
+killer:"Non dire solo venule: Behçet colpisce arterie e vene di qualsiasi calibro.",
+questions:["Triade?","Patergia?","HLA-B51?","Quali vasi?","Uveite?","Aneurisma polmonare?","Terapia?"]
+},
+{
+area:"Reumatologia",tier:"A",title:"Spondilite Anchilosante",
+short:"Lombalgia infiammatoria, sacroileite, HLA-B27, RM precoce, uveite, FANS/anti-TNF.",
+oral:"La spondilite anchilosante è una spondiloartrite infiammatoria cronica con coinvolgimento prevalente di sacroiliache e colonna. Si manifesta con lombalgia infiammatoria, che migliora con movimento e peggiora col riposo. È associata a HLA-B27, ma questo non è diagnostico. La RM permette diagnosi precoce di sacroileite. La terapia comprende FANS e biologici anti-TNF o anti-IL17.",
+killer:"HLA-B27 è associato ma non diagnostico.",
+questions:["Lombalgia infiammatoria?","HLA-B27?","Sacroileite?","RM?","Schober?","Sindesmofiti?","Uveite?"]
+},
+{
+area:"Reumatologia",tier:"A",title:"PMR e Horton",
+short:"PMR: dolore/rigidità dei cingoli, VES alta, steroidi. Horton: cefalea, claudicatio mandibolare, cecità, steroidi subito.",
+oral:"La polimialgia reumatica è una malattia infiammatoria dell’anziano con dolore e rigidità dei cingoli scapolare e pelvico, VES/PCR elevate e rapida risposta ai corticosteroidi. È associata all’arterite a cellule giganti, che interessa spesso l’arteria temporale e può dare cefalea, claudicatio mandibolare e disturbi visivi. La complicanza più temuta è la cecità, quindi gli steroidi vanno iniziati subito.",
+killer:"In Horton non si aspetta la biopsia: si inizia subito lo steroide per prevenire cecità.",
+questions:["PMR sedi?","Dolore o debolezza?","VES?","Horton sintomi?","Claudicatio mandibolare?","Cecità?","Tocilizumab?"]
+},
+{
+area:"Reumatologia",tier:"B",title:"Sjögren",
+short:"Sindrome sicca, SSA/SSB, Schirmer, biopsia ghiandole salivari, rischio linfoma MALT.",
+oral:"La sindrome di Sjögren è una malattia autoimmune caratterizzata da infiltrazione linfocitaria delle ghiandole esocrine, soprattutto lacrimali e salivari, con xeroftalmia e xerostomia. Può essere primaria o secondaria ad AR o LES. Gli anticorpi tipici sono SSA e SSB. La diagnosi usa anche Schirmer e biopsia delle ghiandole salivari minori. Complicanza importante: linfoma MALT.",
+killer:"Complicanza importante: linfoma MALT.",
+questions:["Sindrome sicca?","SSA/SSB?","Schirmer?","Parotidi?","Biopsia?","Linfoma?"]
+},
+{
+area:"Reumatologia",tier:"B",title:"Dermatomiosite e Polimiosite",
+short:"Debolezza prossimale, non dolore. CPK alta. Dermatomiosite: rash eliotropo, Gottron, neoplasie.",
+oral:"Le miopatie infiammatorie idiopatiche sono malattie autoimmuni caratterizzate da debolezza muscolare prossimale e aumento degli enzimi muscolari. La dermatomiosite associa manifestazioni cutanee tipiche, come rash eliotropo e papule di Gottron. La diagnosi si basa su CPK, EMG, RM e biopsia. La dermatomiosite impone ricerca di neoplasia.",
+killer:"Il sintomo è debolezza prossimale, non dolore. Dermatomiosite = screening neoplasie.",
+questions:["Debolezza o dolore?","CPK?","Rash eliotropo?","Gottron?","Neoplasie?","Terapia?"]
+}
 ];
 
-const cards=[
-["Ortolani?","Riduce un’anca lussata."],
-["Barlow?","Lussa un’anca instabile."],
-["Cos’è il limbus?","Cercine acetabolare deformato/fibrotico."],
-["Cobb?","Misura l’angolo della scoliosi."],
-["Risser 0 o 5?","Risser 0."],
-["Anti-CCP?","Più specifici del FR."],
-["DIP nell’AR?","Risparmiate."],
-["Dattilite?","Dito a salsicciotto."],
-["Complemento nel LES attivo?","Basso."],
-["Vasi Behçet?","Arterie e vene di qualsiasi calibro."],
-["Terapia crisi renale sclerodermica?","ACE-inibitori."],
-["Horton: perché steroidi subito?","Per prevenire cecità irreversibile."],
-["Sjögren complicanza?","Linfoma MALT."],
-["Farmaco che costruisce osso?","Teriparatide."]
+const flashcards=[
+["Ortolani?","Riduce un’anca lussata.","DCA"],
+["Barlow?","Lussa un’anca instabile.","DCA"],
+["Triade di Putti?","Tetto acetabolare inclinato, ritardo nucleo femorale, interruzione Shenton.","DCA"],
+["Cos’è il limbus?","Cercine acetabolare deformato/fibrotico che ostacola la riduzione.","DCA"],
+["Cobb?","Misura l’angolo della scoliosi.","Scoliosi"],
+["Risser 0 o 5: quale peggiore?","Risser 0.","Scoliosi"],
+["Gibbo?","Prominenza costale da rotazione vertebrale.","Scoliosi"],
+["Herring?","Classificazione prognostica del Perthes basata sul pilastro laterale.","Perthes"],
+["Southwick?","Classificazione della gravità dell’epifisiolisi: <30°, 30-60°, >60°.","Epifisiolisi"],
+["CAVE?","Cavismo, Adduzione, Varismo, Equinismo.","PTC"],
+["Compartimento più colpito nella gonartrosi?","Mediale.","Gonartrosi"],
+["Varo?","Sovraccarica compartimento mediale.","Gonartrosi"],
+["Dolore tipico coxartrosi?","Inguinale.","Coxartrosi"],
+["Germe più frequente osteomielite?","Staphylococcus aureus.","Osteomielite"],
+["Triade Morbo di Pott?","Dolore rachideo, cifosi angolare, deficit neurologici/paraplegia.","Pott"],
+["Anti-CCP?","Più specifici del FR nell’AR.","AR"],
+["DIP nell’AR?","Generalmente risparmiate.","AR"],
+["Pannus?","Tessuto sinoviale infiammatorio proliferante che invade cartilagine e osso.","AR"],
+["Metotrexato: cosa associ?","Acido folico/folinico.","AR"],
+["Dattilite?","Dito a salsicciotto.","AP"],
+["Entesite?","Infiammazione dell’inserzione tendinea/legamentosa sull’osso.","AP"],
+["DIP nell’AP?","Frequentemente coinvolte.","AP"],
+["Complemento nel LES attivo?","Basso.","LES"],
+["Anti-dsDNA?","Specifici e correlati a nefrite/attività.","LES"],
+["Organo prognostico nel LES?","Rene.","LES"],
+["SSA/SSB in gravidanza?","Rischio blocco AV congenito.","LES/Sjögren"],
+["Anti-centromero?","Sclerosi sistemica limitata.","SSc"],
+["Anti-Scl70?","Sclerosi sistemica diffusa/interstiziopatia.","SSc"],
+["Raynaud tricromia?","Bianco → blu → rosso.","SSc"],
+["Crisi renale sclerodermica terapia?","ACE-inibitori.","SSc"],
+["Vasi colpiti nel Behçet?","Arterie e vene di qualsiasi calibro.","Behçet"],
+["HLA Behçet?","HLA-B51.","Behçet"],
+["Patergia?","Pustola/papula dopo trauma cutaneo minimo.","Behçet"],
+["Lombalgia infiammatoria?","Migliora col movimento e peggiora col riposo.","Spondilite"],
+["HLA-B27 è diagnostico?","No, è solo associato.","Spondilite"],
+["Manifestazione extra-articolare SA?","Uveite anteriore.","Spondilite"],
+["PMR: dolore o debolezza?","Dolore e rigidità; forza conservata.","PMR"],
+["Horton: perché steroidi subito?","Per prevenire cecità irreversibile.","Horton"],
+["Claudicatio mandibolare?","Dolore ischemico durante la masticazione.","Horton"],
+["Sjögren complicanza?","Linfoma MALT.","Sjögren"],
+["Dermatomiosite sintomo principale?","Debolezza prossimale.","Dermatomiosite"],
+["Rash eliotropo?","Manifestazione cutanea della dermatomiosite.","Dermatomiosite"],
+["Farmaco che costruisce osso?","Teriparatide.","Osteoporosi"],
+["Denosumab?","Anti-RANKL.","Osteoporosi"],
+["Tocilizumab?","Anti-recettore IL-6.","Farmaci"],
+["Secukinumab?","Anti-IL17.","Farmaci"],
+["Belimumab?","Anti-BLyS/BAFF.","Farmaci"],
+["Screening prima di anti-TNF?","Tubercolosi latente/Quantiferon.","Farmaci"]
 ];
 
-let i=0, flipped=false;
+const cases=[
+["Maschio di 13 anni obeso, zoppia e dolore al ginocchio.","Epifisiolisi","RX AP + Lauenstein; Southwick; osteonecrosi."],
+["Bambino di 6 anni con zoppia progressiva e limitazione dell’abduzione dell’anca.","Perthes","Necrosi ischemica; Catterall/Herring; coxa plana."],
+["Neonato con Ortolani positivo.","DCA","Eco Graf; Pavlik; rischio coxartrosi."],
+["Ragazza di 13 anni con gibbo costale.","Scoliosi idiopatica","Adams; Cobb; Risser."],
+["Donna di 55 anni con dolore meccanico al ginocchio e RX con osteofiti.","Gonartrosi","Compartimento mediale; varo/valgo; protesi se avanzata."],
+["Donna di 42 anni con rigidità mattutina di 2 ore e MCP tumefatte bilateralmente.","Artrite reumatoide","Anti-CCP; DIP risparmiate; metotrexato."],
+["Psoriasi, dito a salsicciotto e dolore al tendine d’Achille.","Artrite psoriasica","Dattilite; entesite; DIP; anti-IL17."],
+["Donna giovane ANA+, anti-dsDNA+, proteinuria.","LES","Complemento basso; rene prognostico; idrossiclorochina."],
+["Raynaud, disfagia e anti-centromero positivi.","Sclerosi sistemica limitata","CREST; esofago; ipertensione polmonare."],
+["Afte orali ricorrenti, ulcere genitali e uveite.","Behçet","Patergia; HLA-B51; arterie e vene di ogni calibro."],
+["Cefalea temporale, VES 110, claudicatio mandibolare.","Horton","Cecità; steroidi subito; biopsia temporale."],
+["Occhi secchi, bocca secca, SSA positivi.","Sjögren","Schirmer; SSA/SSB; linfoma MALT."],
+["Debolezza nel salire le scale e rash eliotropo.","Dermatomiosite","CPK elevata; Gottron; ricerca neoplasia."]
+];
+
+const drugs=[
+["Metotrexato","Prima linea AR. Associare acido folico. Tossicità: epatica, midollare, mucosale, teratogena."],
+["Idrossiclorochina","Cardine LES. Tossicità: retinopatia. Serve controllo oculistico."],
+["Corticosteroidi","PMR, Horton, LES severo, vasculiti, dermatomiosite. In Horton iniziare subito."],
+["Tocilizumab","Anti-recettore IL-6. Usato in AR e Horton."],
+["Anti-TNF","AR, AP, spondilite, Behçet severo. Prima: screening TB."],
+["Secukinumab","Anti-IL17. Utile in AP e spondiloartriti."],
+["Belimumab","Anti-BLyS/BAFF. Usato nel LES."],
+["Colchicina","Behçet lieve, FMF, gotta. Riduce attività neutrofila."],
+["Denosumab","Anti-RANKL. Farmaco anti-riassorbitivo per osteoporosi."],
+["Teriparatide","Analogo PTH intermittente. Farmaco anabolizzante: costruisce osso."],
+["Bisfosfonati","Inibiscono osteoclasti. Effetto collaterale famoso: osteonecrosi mandibolare."]
+];let currentSection="home";
+let flashIndex=0;
+let flipped=false;
+let flashMode="all";
 let errors=JSON.parse(localStorage.getItem("errors")||"[]");
+let strong=JSON.parse(localStorage.getItem("strong")||"[]");
 
-function save(){localStorage.setItem("errors",JSON.stringify(errors))}
-function addError(x){errors.push(x);save();alert("Aggiunto agli errori")}
+function save(){
+localStorage.setItem("errors",JSON.stringify(errors));
+localStorage.setItem("strong",JSON.stringify(strong));
+}
+
+function setActive(){
+["home","manuale","flash","prof","errori"].forEach(x=>{
+let el=document.getElementById("n-"+x);
+if(el){el.classList.remove("active")}
+});
+let active=document.getElementById("n-"+currentSection);
+if(active){active.classList.add("active")}
+}
+
+function go(section){
+currentSection=section;
+setActive();
+if(section==="home") home();
+if(section==="manuale") manuale();
+if(section==="flash") flash();
+if(section==="prof") prof();
+if(section==="errori") errori();
+}
+
+function addError(x){
+errors.push(x);
+save();
+alert("Aggiunto all’Error Book");
+}
+
+function toggleStrong(x){
+if(strong.includes(x)){
+strong=strong.filter(a=>a!==x);
+}else{
+strong.push(x);
+}
+save();
+manuale();
+}
+
+function tierClass(t){
+if(t==="S") return "tierS";
+if(t==="A") return "tierA";
+return "tierB";
+}
 
 function home(){
-app.innerHTML=`<div class="card"><h1>Preparatore Orale Orto-Reumato</h1><p>Manuale, flashcard, simulazioni e Error Book.</p></div>
-<div class="card"><h2>Ultimi 3 giorni</h2><p><b>Giorno 1:</b> DCA, scoliosi, gonartrosi, Perthes, epifisiolisi.</p><p><b>Giorno 2:</b> AR, AP, LES, sclerosi sistemica, Behçet.</p><p><b>Giorno 3:</b> solo simulazioni + Error Book.</p></div>`;
+let total=topics.length;
+let done=strong.length;
+let perc=Math.round(done/total*100);
+
+app.innerHTML=`
+<div class="card hero">
+<h1>Preparatore Orale Orto-Reumato</h1>
+<p>Versione V2 completa: manuale, flashcard, casi clinici, farmaci, simulazioni e Error Book.</p>
+</div>
+
+<div class="card">
+<h2>Radar preparazione</h2>
+<p class="small">Argomenti segnati come forti: ${done}/${total}</p>
+<div class="progress"><div style="width:${perc}%"></div></div>
+<p><b>${perc}%</b> completato</p>
+</div>
+
+<div class="card">
+<h2>Uso consigliato</h2>
+<p><b>Manuale</b>: costruisci il discorso orale.</p>
+<p><b>Flash</b>: ripasso rapido e trabocchetti.</p>
+<p><b>Prof</b>: simulazione Mariconda/Caso/Commissione.</p>
+<p><b>Errori</b>: ripassa ciò che sbagli.</p>
+</div>
+
+<div class="card">
+<h2>Ultimi 3 giorni</h2>
+<p><b>Giorno 1:</b> DCA, scoliosi, gonartrosi, Perthes, epifisiolisi, PTC.</p>
+<p><b>Giorno 2:</b> AR, AP, LES, SSc, Behçet, SA, PMR/Horton.</p>
+<p><b>Giorno 3:</b> solo simulazioni + Error Book.</p>
+</div>
+
+<div class="card">
+<h2>Top 10 da sapere fortissimo</h2>
+<ol>
+<li>DCA</li>
+<li>Scoliosi</li>
+<li>Gonartrosi</li>
+<li>Perthes</li>
+<li>Epifisiolisi</li>
+<li>Artrite Reumatoide</li>
+<li>Artrite Psoriasica</li>
+<li>LES</li>
+<li>Sclerosi Sistemica</li>
+<li>Behçet</li>
+</ol>
+</div>
+`;
 }
 
 function manuale(){
-app.innerHTML="<div class='card'><h1>Manuale Orale</h1></div>"+topics.map(t=>`<div class="card"><h2>${t[0]}</h2><p class="ok">${t[1]}</p><p class="killer"><b>Trabocchetto:</b> ${t[2]}</p><button onclick="addError('${t[0]}')">Segna debole</button></div>`).join("");
+app.innerHTML=`
+<div class="card">
+<h1>Manuale Orale</h1>
+<input id="search" placeholder="Cerca argomento..." oninput="renderTopics()">
+<div class="row">
+<button onclick="filterArea('all')">Tutti</button>
+<button onclick="filterArea('Ortopedia')">Ortopedia</button>
+<button onclick="filterArea('Reumatologia')">Reumatologia</button>
+</div>
+</div>
+<div id="topicList"></div>
+`;
+renderTopics();
+}
+
+let currentFilter="all";
+
+function filterArea(x){
+currentFilter=x;
+renderTopics();
+}
+
+function renderTopics(){
+let q=(document.getElementById("search")?.value||"").toLowerCase();
+
+let list=topics.filter(t=>{
+let okFilter=currentFilter==="all" || t.area.includes(currentFilter);
+let okSearch=JSON.stringify(t).toLowerCase().includes(q);
+return okFilter && okSearch;
+});
+
+topicList.innerHTML=list.map((t,idx)=>{
+let realIndex=topics.indexOf(t);
+let isStrong=strong.includes(t.title);
+return `
+<div class="card">
+<span class="badge ${tierClass(t.tier)}">Tier ${t.tier}</span>
+<span class="badge">${t.area}</span>
+<h2>${t.title}</h2>
+<p class="ok">${t.short}</p>
+<details>
+<summary>Discorso da orale</summary>
+<p>${t.oral}</p>
+</details>
+<details>
+<summary>Domande frequenti</summary>
+<ul>${t.questions.map(q=>`<li>${q}</li>`).join("")}</ul>
+</details>
+<p class="killer"><b>Trabocchetto:</b> ${t.killer}</p>
+<div class="row">
+<button class="${isStrong?'green':'primary'}" onclick="toggleStrong('${t.title}')">${isStrong?'Forte ✓':'Segna forte'}</button>
+<button class="red" onclick="addError('${t.title}')">Segna debole</button>
+<button onclick="startSpecific(${realIndex})">Simula</button>
+</div>
+</div>
+`;
+}).join("");
 }
 
 function flash(){
+flashIndex=0;
+flipped=false;
+
+app.innerHTML=`
+<div class="card">
+<h1>Flashcard</h1>
+<div class="row">
+<button onclick="setFlashMode('all')">Tutte</button>
+<button onclick="setFlashMode('killer')">Solo trabocchetti</button>
+<button onclick="setFlashMode('errors')">Errori</button>
+</div>
+</div>
+
+<div class="card">
+<p class="small" id="flashMeta"></p>
+<div class="flash" id="flashBox" onclick="flipCard()"></div>
+<div class="row">
+<button onclick="prevCard()">←</button>
+<button class="primary" onclick="flipCard()">Mostra</button>
+<button onclick="nextCard()">→</button>
+<button class="red" onclick="markFlashError()">Non la so</button>
+</div>
+</div>
+`;
+showCard();
+}
+
+function getFlashPool(){
+if(flashMode==="killer"){
+return topics.map(t=>[t.title,t.killer,t.title]);
+}
+if(flashMode==="errors"){
+if(errors.length===0) return [["Nessun errore salvato","Vai nel Manuale o nelle Flashcard e segna ciò che non sai.","Error Book"]];
+return errors.map(e=>[e,"Ripassa questo punto e ripetilo a voce.", "Error Book"]);
+}
+return flashcards;
+}
+
+function setFlashMode(m){
+flashMode=m;
+flashIndex=0;
 flipped=false;
 showCard();
 }
 
 function showCard(){
-app.innerHTML=`<div class="card"><h1>Flashcard</h1><p>${i+1}/${cards.length}</p><div class="flash" onclick="flip()">${flipped?cards[i][1]:cards[i][0]}</div><button onclick="prev()">←</button><button onclick="flip()">Mostra</button><button onclick="next()">→</button><button onclick="addError(cards[i][0])">Non la so</button></div>`;
+let pool=getFlashPool();
+let c=pool[flashIndex%pool.length];
+flashMeta.innerHTML=`${flashIndex+1}/${pool.length} · ${c[2]}`;
+flashBox.innerHTML=flipped?c[1]:c[0];
 }
 
-function flip(){flipped=!flipped;showCard()}
-function next(){i=(i+1)%cards.length;flipped=false;showCard()}
-function prev(){i=(i-1+cards.length)%cards.length;flipped=false;showCard()}
+function flipCard(){
+flipped=!flipped;
+showCard();
+}
+
+function nextCard(){
+let pool=getFlashPool();
+flashIndex=(flashIndex+1)%pool.length;
+flipped=false;
+showCard();
+}
+
+function prevCard(){
+let pool=getFlashPool();
+flashIndex=(flashIndex-1+pool.length)%pool.length;
+flipped=false;
+showCard();
+}
+
+function markFlashError(){
+let pool=getFlashPool();
+let c=pool[flashIndex%pool.length];
+addError(c[2]+": "+c[0]);
+}
 
 function prof(){
-let t=topics[Math.floor(Math.random()*topics.length)];
-app.innerHTML=`<div class="card"><h1>Modalità Professore</h1><p>Rispondi a voce per 90 secondi.</p><h2>Mi parli di: ${t[0]}</h2><details><summary>Risposta breve</summary><p>${t[1]}</p></details><details><summary>Trabocchetto</summary><p>${t[2]}</p></details><button onclick="prof()">Nuova domanda</button><button onclick="addError('Simulazione: ${t[0]}')">Segna debole</button></div>`;
+app.innerHTML=`
+<div class="card hero">
+<h1>Modalità Professore</h1>
+<p>Rispondi a voce per 90 secondi. Poi apri risposta breve e trabocchetto.</p>
+</div>
+
+<div class="card">
+<h2>Scegli modalità</h2>
+<div class="row">
+<button class="primary" onclick="startProf('Mariconda')">Mariconda</button>
+<button class="primary" onclick="startProf('Caso')">Caso</button>
+<button class="warn" onclick="startProf('Commissione')">Commissione</button>
+</div>
+</div>
+
+<div id="profBox"></div>
+
+<div class="card">
+<h2>Casi clinici</h2>
+${cases.map((c,i)=>`
+<details>
+<summary>Caso ${i+1}</summary>
+<p>${c[0]}</p>
+<p><b>Diagnosi:</b> ${c[1]}</p>
+<p>${c[2]}</p>
+<button class="red" onclick="addError('Caso clinico ${i+1}: ${c[1]}')">Segna debole</button>
+</details>
+`).join("")}
+</div>
+
+<div class="card">
+<h2>Farmaci da orale</h2>
+${drugs.map(d=>`
+<details>
+<summary>${d[0]}</summary>
+<p>${d[1]}</p>
+</details>
+`).join("")}
+</div>
+`;
+}
+
+function startSpecific(index){
+currentSection="prof";
+setActive();
+let t=topics[index];
+app.innerHTML=`
+<div class="card hero">
+<h1>Simulazione mirata</h1>
+<p>Rispondi a voce per 90 secondi.</p>
+</div>
+<div class="card">
+<h2>Mi parli di: ${t.title}</h2>
+<details><summary>Risposta breve</summary><p>${t.short}</p></details>
+<details><summary>Discorso da orale</summary><p>${t.oral}</p></details>
+<details><summary>Trabocchetto</summary><p>${t.killer}</p></details>
+<details><summary>Follow-up</summary><ul>${t.questions.map(q=>`<li>${q}</li>`).join("")}</ul></details>
+<button class="red" onclick="addError('Simulazione: ${t.title}')">Segna debole</button>
+<button class="primary" onclick="prof()">Torna a Prof</button>
+</div>
+`;
+}
+
+function startProf(mode){
+let pool;
+if(mode==="Mariconda"){
+pool=topics.filter(t=>t.area.includes("Ortopedia"));
+}
+else if(mode==="Caso"){
+pool=topics.filter(t=>t.area.includes("Reumatologia"));
+}
+else{
+pool=topics;
+}
+
+let t=pool[Math.floor(Math.random()*pool.length)];
+
+profBox.innerHTML=`
+<div class="card">
+<span class="badge">${mode}</span>
+<h2>Mi parli di: ${t.title}</h2>
+<p class="small">Prima rispondi senza guardare. Poi apri le sezioni.</p>
+
+<details>
+<summary>Risposta breve</summary>
+<p>${t.short}</p>
+</details>
+
+<details>
+<summary>Discorso da orale</summary>
+<p>${t.oral}</p>
+</details>
+
+<details>
+<summary>Follow-up del professore</summary>
+<ul>${t.questions.map(q=>`<li>${q}</li>`).join("")}</ul>
+</details>
+
+<details>
+<summary>Trabocchetto killer</summary>
+<p>${t.killer}</p>
+</details>
+
+<div class="row">
+<button class="red" onclick="addError('Simulazione ${mode}: ${t.title}')">Segna debole</button>
+<button class="primary" onclick="startProf('${mode}')">Nuova domanda</button>
+</div>
+</div>
+`;
 }
 
 function errori(){
-app.innerHTML="<div class='card'><h1>Error Book</h1><button onclick='errors=[];save();errori()'>Svuota</button></div>"+(errors.length?errors.map((e,n)=>`<div class="card killer">${n+1}. ${e}</div>`).join(""):"<div class='card'>Nessun errore salvato.</div>");
+app.innerHTML=`
+<div class="card">
+<h1>Error Book</h1>
+<p class="small">Rivedi ogni sera questi punti. Quando li sai, svuota o rimuovi manualmente ricaricando la lista.</p>
+<button class="red" onclick="errors=[];save();errori()">Svuota tutto</button>
+</div>
+${
+errors.length
+? errors.map((e,i)=>`
+<div class="card killer">
+<b>${i+1}.</b> ${e}
+<br>
+<button onclick="errors.splice(${i},1);save();errori()">Rimuovi</button>
+</div>
+`).join("")
+: "<div class='card'>Nessun errore salvato.</div>"
+}
+`;
 }
 
-home();
+go("home");
 </script>
 
 </body>
