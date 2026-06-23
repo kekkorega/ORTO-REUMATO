@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preparatore Orto-Reumato V2</title>
+<title>Preparatore Orto-Reumato </title>
 
 <style>
 :root{
@@ -83,7 +83,7 @@ right:0;
 background:#0c141f;
 border-top:1px solid rgba(255,255,255,.08);
 display:grid;
-grid-template-columns:repeat(6,1fr);
+grid-template-columns:repeat(7,1fr);
 padding:8px 5px calc(8px + env(safe-area-inset-bottom));
 z-index:10;
 }
@@ -177,8 +177,8 @@ gap:10px;
 <button onclick="go('flash')" id="n-flash">Flash</button>
 <button onclick="go('prof')" id="n-prof">Prof</button>
 <button onclick="go('quiz')" id="n-quiz">Quiz</button>
+<button onclick="go('algoritmi')" id="n-algoritmi">DD/Alg</button>
 <button onclick="go('errori')" id="n-errori">Errori</button>
-
 <script>
 const topics=[
 {
@@ -423,7 +423,8 @@ if(section==="home") home();
 if(section==="manuale") manuale();
 if(section==="flash") flash();
 if(section==="prof") prof();
-if(section==="quiz") quiz();
+mif(section==="quiz") quiz();
+if(section==="algoritmi") algoritmi();
 if(section==="errori") errori();
 }
 
@@ -1223,8 +1224,280 @@ function nextQuiz(){
 quizIndex++;
 answered=false;
 renderQuiz();
+const algorithms = [
+
+{
+title:"DCA",
+dd:[
+"Sinovite transitoria dell'anca",
+"Perthes",
+"Epifisiolisi",
+"Paralisi ostetrica",
+"Artrogriposi"
+],
+algo:[
+"Anamnesi (presentazione podalica, familiarità)",
+"Ortolani e Barlow",
+"Ecografia secondo Graf",
+"RX dopo il 6° mese",
+"Classificazione e trattamento"
+],
+killer:[
+"Confondere Ortolani e Barlow",
+"Pensare che la RX sia l'esame di scelta nel neonato"
+]
+},
+
+{
+title:"Perthes",
+dd:[
+"Epifisiolisi",
+"Sinovite transitoria",
+"Osteomielite",
+"Tumori ossei"
+],
+algo:[
+"Bambino 4-8 anni con zoppia",
+"RX bacino",
+"Classificazione Catterall/Herring",
+"Valutazione contenimento",
+"Follow-up"
+],
+killer:[
+"Confondere Perthes con epifisiolisi"
+]
+},
+
+{
+title:"Epifisiolisi",
+dd:[
+"Perthes",
+"Sinovite transitoria",
+"Frattura collo femore",
+"Osteomielite"
+],
+algo:[
+"Adolescente obeso",
+"Dolore anca o ginocchio",
+"RX AP + Lauenstein",
+"Southwick",
+"Trattamento chirurgico"
+],
+killer:[
+"Non eseguire Lauenstein",
+"Sottovalutare il dolore al ginocchio"
+]
+},
+
+{
+title:"Artrite Reumatoide",
+dd:[
+"Artrite psoriasica",
+"LES",
+"Artrite virale",
+"Gotta",
+"Artrosi erosiva"
+],
+algo:[
+"Clinica",
+"VES/PCR",
+"FR",
+"Anti-CCP",
+"Ecografia articolare",
+"Classificazione ACR/EULAR"
+],
+killer:[
+"Dire che le DIP sono tipicamente colpite",
+"Pensare che il FR sia più specifico degli anti-CCP"
+]
+},
+
+{
+title:"LES",
+dd:[
+"AR",
+"Sjögren",
+"Sclerosi sistemica",
+"MCTD",
+"Vasculiti ANCA"
+],
+algo:[
+"ANA",
+"ENA",
+"Anti-dsDNA",
+"Complemento",
+"Valutazione renale",
+"Biopsia renale se indicata"
+],
+killer:[
+"Complemento alto",
+"Sottovalutare il rene"
+]
+},
+
+{
+title:"Sclerosi Sistemica",
+dd:[
+"LES",
+"MCTD",
+"Morfea",
+"Fascite eosinofila"
+],
+algo:[
+"Raynaud",
+"Capillaroscopia",
+"Autoanticorpi",
+"Studio polmonare",
+"Studio cardiaco",
+"Monitoraggio renale"
+],
+killer:[
+"Non conoscere la crisi renale sclerodermica"
+]
+},
+
+{
+title:"Behçet",
+dd:[
+"Crohn",
+"Herpes genitale",
+"LES",
+"Vasculiti ANCA"
+],
+algo:[
+"Afte orali ricorrenti",
+"Ulcere genitali",
+"Uveite",
+"Patergia",
+"Valutazione vascolare"
+],
+killer:[
+"Dire che colpisce solo le vene"
+]
+}
+
+];
+function algoritmi(){
+
+app.innerHTML=`
+<div class="card hero">
+<h1>Diagnosi differenziali e algoritmi</h1>
+<p>Sezione per rispondere alle domande da 30: “perché è questo e non altro?”</p>
+</div>
+
+<div class="card">
+<h2>Seleziona argomento</h2>
+${algorithms.map((a,i)=>`
+<button onclick="showAlgorithm(${i})">${a.title}</button>
+`).join("")}
+</div>
+
+<div class="card">
+<h2>Errori da bocciatura</h2>
+<ul>
+<li>Confondere Ortolani e Barlow.</li>
+<li>Dire che la RX è l’esame di scelta nel neonato con DCA.</li>
+<li>Confondere Perthes con epifisiolisi.</li>
+<li>Dire che le DIP sono tipicamente colpite nell’AR.</li>
+<li>Dire che il FR è più specifico degli anti-CCP.</li>
+<li>Dire che il complemento è alto nel LES attivo.</li>
+<li>Dimenticare il rene nel LES.</li>
+<li>Dimenticare ACE-inibitori nella crisi renale sclerodermica.</li>
+<li>Dire che Behçet colpisce solo le vene o solo le venule.</li>
+<li>Dire che HLA-B27 è diagnostico nella spondilite anchilosante.</li>
+<li>Confondere PMR con dermatomiosite: PMR = dolore, dermatomiosite = debolezza.</li>
+<li>Dimenticare il rischio di cecità nell’Horton.</li>
+<li>Dimenticare linfoma MALT nello Sjögren.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Modalità 30 e lode</h2>
+<p>Usa questa sequenza quando vuoi fare una risposta superiore:</p>
+<ol>
+<li>Definizione secca.</li>
+<li>Clinica tipica.</li>
+<li>Diagnosi e test principali.</li>
+<li>Diagnosi differenziale.</li>
+<li>Terapia.</li>
+<li>Complicanza/trabocchetto.</li>
+</ol>
+<button class="primary" onclick="thirtyMode()">Avvia domanda 30 e lode</button>
+</div>
+
+<div id="algoBox"></div>
+`;
 
 }
+
+function showAlgorithm(i){
+
+let a=algorithms[i];
+
+document.getElementById("algoBox").innerHTML=`
+<div class="card">
+<h2>${a.title}</h2>
+
+<h3>Diagnosi differenziale</h3>
+<ul>
+${a.dd.map(x=>`<li>${x}</li>`).join("")}
+</ul>
+
+<h3>Algoritmo diagnostico</h3>
+<ol>
+${a.algo.map(x=>`<li>${x}</li>`).join("")}
+</ol>
+
+<h3>Errori da evitare</h3>
+<ul>
+${a.killer.map(x=>`<li>${x}</li>`).join("")}
+</ul>
+
+<button class="red" onclick="addError('Algoritmo/DD: ${a.title}')">Segna debole</button>
+</div>
+`;
+
+}
+
+function thirtyMode(){
+
+let a=algorithms[Math.floor(Math.random()*algorithms.length)];
+
+document.getElementById("algoBox").innerHTML=`
+<div class="card hero">
+<h2>Domanda 30 e lode</h2>
+<p><b>Mi parli di ${a.title}, includendo diagnosi differenziale e algoritmo diagnostico.</b></p>
+</div>
+
+<div class="card">
+<details>
+<summary>Diagnosi differenziale da citare</summary>
+<ul>
+${a.dd.map(x=>`<li>${x}</li>`).join("")}
+</ul>
+</details>
+
+<details>
+<summary>Algoritmo diagnostico</summary>
+<ol>
+${a.algo.map(x=>`<li>${x}</li>`).join("")}
+</ol>
+</details>
+
+<details>
+<summary>Errori da evitare</summary>
+<ul>
+${a.killer.map(x=>`<li>${x}</li>`).join("")}
+</ul>
+</details>
+
+<button class="primary" onclick="thirtyMode()">Nuova domanda</button>
+<button class="red" onclick="addError('30 e lode: ${a.title}')">Segna debole</button>
+</div>
+`;
+
+}
+
 go("home");
 </script>
 
