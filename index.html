@@ -176,8 +176,8 @@ gap:10px;
 <button onclick="go('manuale')" id="n-manuale">Manuale</button>
 <button onclick="go('flash')" id="n-flash">Flash</button>
 <button onclick="go('prof')" id="n-prof">Prof</button>
+<button onclick="go('quiz')" id="n-quiz">Quiz</button>
 <button onclick="go('errori')" id="n-errori">Errori</button>
-</div>
 
 <script>
 const topics=[
@@ -418,10 +418,12 @@ if(active){active.classList.add("active")}
 function go(section){
 currentSection=section;
 setActive();
+
 if(section==="home") home();
 if(section==="manuale") manuale();
 if(section==="flash") flash();
 if(section==="prof") prof();
+if(section==="quiz") quiz();
 if(section==="errori") errori();
 }
 
@@ -768,7 +770,160 @@ errors.length
 }
 `;
 }
+const quizQuestions = [
+{
+q:"Quale manovra riduce un'anca lussata nella DCA?",
+a:["Barlow","Ortolani","Adams","Thomas"],
+c:1,
+exp:"Ortolani riduce l'anca; Barlow cerca di lussarla."
+},
+{
+q:"Quale indice misura la scoliosi?",
+a:["Risser","Southwick","Cobb","Graf"],
+c:2,
+exp:"L'angolo di Cobb quantifica la scoliosi."
+},
+{
+q:"Quale articolazione è generalmente risparmiata nell'AR?",
+a:["MCP","PIP","Polso","DIP"],
+c:3,
+exp:"Le DIP sono tipicamente risparmiate."
+},
+{
+q:"Quale autoanticorpo è più specifico per AR?",
+a:["ANA","FR","Anti-CCP","SSA"],
+c:2,
+exp:"Gli anti-CCP sono più specifici del FR."
+},
+{
+q:"Quale organo ha il maggior peso prognostico nel LES?",
+a:["Cute","Rene","Articolazioni","Polmone"],
+c:1,
+exp:"La nefrite lupica è un importante fattore prognostico."
+},
+{
+q:"Quale anticorpo è associato alla sclerosi sistemica limitata?",
+a:["Anti-Scl70","Anti-centromero","Anti-dsDNA","Anti-Sm"],
+c:1,
+exp:"Anti-centromero = forma limitata."
+},
+{
+q:"Quale HLA è associato a Behçet?",
+a:["HLA-B27","HLA-DR4","HLA-B51","HLA-A2"],
+c:2,
+exp:"Behçet è associato a HLA-B51."
+},
+{
+q:"Qual è il sintomo tipico della PMR?",
+a:["Debolezza distale","Dolore e rigidità dei cingoli","Dattilite","Entesite"],
+c:1,
+exp:"PMR = dolore e rigidità dei cingoli."
+},
+{
+q:"Quale farmaco costruisce osso?",
+a:["Denosumab","Alendronato","Teriparatide","Ibuprofene"],
+c:2,
+exp:"Teriparatide è un farmaco anabolizzante."
+},
+{
+q:"Qual è il germe più frequente nell'osteomielite?",
+a:["E. coli","S. aureus","Pseudomonas","Klebsiella"],
+c:1,
+exp:"S. aureus è il patogeno principale."
+}
+];
 
+let quizIndex=0;
+let quizScore=0;
+
+function quiz(){
+
+quizIndex=0;
+quizScore=0;
+renderQuiz();
+
+}
+
+function renderQuiz(){
+
+if(quizIndex>=quizQuestions.length){
+
+app.innerHTML=`
+<div class="card">
+<h1>Quiz completato</h1>
+<h2>Punteggio: ${quizScore}/${quizQuestions.length}</h2>
+<button class="primary" onclick="quiz()">Ricomincia</button>
+</div>
+`;
+
+return;
+}
+
+let q=quizQuestions[quizIndex];
+
+app.innerHTML=`
+<div class="card">
+<h1>Quiz</h1>
+<p>Domanda ${quizIndex+1}/${quizQuestions.length}</p>
+
+<h2>${q.q}</h2>
+
+${q.a.map((x,i)=>`
+<button style="display:block;width:100%;margin-bottom:8px"
+onclick="answerQuiz(${i})">
+${x}
+</button>
+`).join("")}
+
+</div>
+`;
+
+}
+
+function answerQuiz(i){
+
+let q=quizQuestions[quizIndex];
+
+if(i===q.c){
+
+quizScore++;
+
+app.innerHTML=`
+<div class="card">
+<h2>✅ Corretta</h2>
+<p>${q.exp}</p>
+<button class="primary" onclick="nextQuiz()">
+Continua
+</button>
+</div>
+`;
+
+}else{
+
+addError("Quiz: "+q.q);
+
+app.innerHTML=`
+<div class="card">
+<h2>❌ Errata</h2>
+<p>${q.exp}</p>
+<p><b>Risposta corretta:</b> ${q.a[q.c]}</p>
+
+<button class="primary" onclick="nextQuiz()">
+Continua
+</button>
+</div>
+`;
+
+}
+
+}
+
+function nextQuiz(){
+
+quizIndex++;
+renderQuiz();
+
+}
 go("home");
 </script>
 
