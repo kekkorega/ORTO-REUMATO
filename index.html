@@ -770,111 +770,403 @@ errors.length
 }
 `;
 }
-const quizQuestions = [
+const quizBank = [
 {
-q:"Quale manovra riduce un'anca lussata nella DCA?",
-a:["Barlow","Ortolani","Adams","Thomas"],
+cat:"Ortopedia", topic:"DCA",
+q:"Nella DCA, quale manovra riduce un'anca lussata?",
+a:["Barlow","Ortolani","Adams","Schober"],
 c:1,
-exp:"Ortolani riduce l'anca; Barlow cerca di lussarla."
+exp:"Ortolani riduce un'anca già lussata. Barlow invece provoca la lussazione di un'anca instabile."
 },
 {
-q:"Quale indice misura la scoliosi?",
-a:["Risser","Southwick","Cobb","Graf"],
+cat:"Ortopedia", topic:"DCA",
+q:"Nella DCA, lo 'scatto di uscita' è associato a:",
+a:["Ortolani","Barlow","Galeazzi","Graf"],
+c:1,
+exp:"Barlow provoca la fuoriuscita/lussazione dell'anca instabile: scatto di uscita."
+},
+{
+cat:"Ortopedia", topic:"DCA",
+q:"Qual è la metodica di scelta per valutare la DCA nei primi mesi di vita?",
+a:["RX bacino","TC","Ecografia secondo Graf","RM"],
 c:2,
-exp:"L'angolo di Cobb quantifica la scoliosi."
+exp:"Nei primi mesi la testa femorale è prevalentemente cartilaginea, quindi l'ecografia secondo Graf è l'esame più utile."
 },
 {
-q:"Quale articolazione è generalmente risparmiata nell'AR?",
-a:["MCP","PIP","Polso","DIP"],
+cat:"Ortopedia", topic:"DCA",
+q:"La complicanza tardiva più importante della DCA non trattata è:",
+a:["Gonartrosi","Coxartrosi precoce","Osteomielite","Scoliosi"],
+c:1,
+exp:"La DCA altera la congruenza e la distribuzione dei carichi sull'anca, favorendo coxartrosi precoce."
+},
+{
+cat:"Ortopedia", topic:"Scoliosi",
+q:"La scoliosi vera si distingue dall'atteggiamento scoliotico perché presenta:",
+a:["Dolore sempre presente","Rotazione vertebrale","Febbre","Osteofiti"],
+c:1,
+exp:"La scoliosi strutturata è una deformità tridimensionale con rotazione vertebrale; l'atteggiamento scoliotico è correggibile e senza rotazione."
+},
+{
+cat:"Ortopedia", topic:"Scoliosi",
+q:"Il test di Adams serve a evidenziare:",
+a:["Il segno di Galeazzi","Il gibbo costale","La sacroileite","La coxa plana"],
+c:1,
+exp:"Il test di Adams, con flessione anteriore del tronco, evidenzia il gibbo dovuto alla rotazione vertebrale."
+},
+{
+cat:"Ortopedia", topic:"Scoliosi",
+q:"Quale indice valuta la maturità scheletrica nella scoliosi?",
+a:["Cobb","Risser","Southwick","Graf"],
+c:1,
+exp:"Risser valuta la maturità scheletrica tramite l'ossificazione dell'apofisi iliaca."
+},
+{
+cat:"Ortopedia", topic:"Scoliosi",
+q:"A parità di Cobb, quale paziente ha maggiore rischio evolutivo?",
+a:["Risser 5","Risser 4","Risser 0","Adulto"],
+c:2,
+exp:"Risser 0 indica elevato potenziale di crescita residua, quindi maggiore rischio di progressione della curva."
+},
+{
+cat:"Ortopedia", topic:"Gonartrosi",
+q:"Il dolore della gonartrosi è tipicamente:",
+a:["Infiammatorio","Meccanico","Notturno puro","Uritico"],
+c:1,
+exp:"La gonartrosi dà dolore meccanico, peggiora con carico/movimento e migliora col riposo."
+},
+{
+cat:"Ortopedia", topic:"Gonartrosi",
+q:"Nel ginocchio varo quale compartimento è sovraccaricato?",
+a:["Laterale","Mediale","Femoro-rotuleo soltanto","Nessuno"],
+c:1,
+exp:"Il varismo sovraccarica il compartimento mediale del ginocchio."
+},
+{
+cat:"Ortopedia", topic:"Perthes",
+q:"La malattia di Perthes colpisce tipicamente:",
+a:["Adolescente obeso","Bambino 4-8 anni","Neonato","Anziano osteoporotico"],
+c:1,
+exp:"Perthes è tipica del bambino, soprattutto maschio, tra 4 e 8 anni."
+},
+{
+cat:"Ortopedia", topic:"Perthes",
+q:"La patogenesi della malattia di Perthes è:",
+a:["Scivolamento epifisario","Necrosi ischemica della testa femorale","Infezione batterica","Autoimmunità sinoviale"],
+c:1,
+exp:"Perthes è una necrosi ischemica del nucleo epifisario prossimale del femore."
+},
+{
+cat:"Ortopedia", topic:"Epifisiolisi",
+q:"Il paziente tipico con epifisiolisi è:",
+a:["Bambino di 5 anni magro","Adolescente maschio obeso","Donna anziana","Neonato podalico"],
+c:1,
+exp:"L'epifisiolisi è tipica dell'adolescente, spesso maschio e obeso."
+},
+{
+cat:"Ortopedia", topic:"Epifisiolisi",
+q:"La classificazione di Southwick valuta:",
+a:["La gravità della scoliosi","La gravità dello scivolamento epifisario","La DCA ecografica","La necrosi nel Perthes"],
+c:1,
+exp:"Southwick valuta il grado di scivolamento nell'epifisiolisi."
+},
+{
+cat:"Ortopedia", topic:"PTC",
+q:"Nel piede torto congenito, CAVE significa:",
+a:["Coxa, anca, varo, equino","Cavismo, adduzione, varismo, equinismo","Calcagno, avampiede, valgismo, estensione","Cifosi, adduzione, varismo, edema"],
+c:1,
+exp:"CAVE = cavismo, adduzione, varismo, equinismo."
+},
+{
+cat:"Ortopedia", topic:"PTC",
+q:"Nel metodo Ponseti, l'ultima deformità corretta è:",
+a:["Cavismo","Adduzione","Varismo","Equinismo"],
 c:3,
-exp:"Le DIP sono tipicamente risparmiate."
+exp:"Nel Ponseti si corregge in ordine CAVE; l'equinismo è l'ultimo."
 },
 {
+cat:"Ortopedia", topic:"Coxartrosi",
+q:"Il dolore tipico della coxartrosi è localizzato soprattutto a:",
+a:["Spalla","Inguine","Polso","Gomito"],
+c:1,
+exp:"La coxartrosi causa tipicamente dolore inguinale, talora irradiato a coscia o ginocchio."
+},
+{
+cat:"Ortopedia", topic:"Coxartrosi",
+q:"Quale movimento si limita precocemente nella coxartrosi?",
+a:["Flessione dorsale","Intrarotazione","Estensione del gomito","Pronosupinazione"],
+c:1,
+exp:"Nella coxartrosi la limitazione precoce dell'intrarotazione è un segno importante."
+},
+{
+cat:"Ortopedia", topic:"Osteoporosi",
+q:"Il T-score diagnostico per osteoporosi è:",
+a:["> -1","Tra -1 e -2,5","≤ -2,5","> 0"],
+c:2,
+exp:"Secondo definizione densitometrica, osteoporosi = T-score ≤ -2,5."
+},
+{
+cat:"Ortopedia", topic:"Osteoporosi",
+q:"Quale farmaco ha azione anabolizzante sull'osso?",
+a:["Alendronato","Denosumab","Teriparatide","Ibuprofene"],
+c:2,
+exp:"Teriparatide è un analogo del PTH a somministrazione intermittente con effetto anabolizzante osseo."
+},
+{
+cat:"Reumatologia", topic:"Artrite Reumatoide",
+q:"La lesione iniziale fondamentale dell'artrite reumatoide è:",
+a:["Osteofita","Sinovite","Ente site","Necrosi epifisaria"],
+c:1,
+exp:"L'AR nasce come sinovite infiammatoria persistente."
+},
+{
+cat:"Reumatologia", topic:"Artrite Reumatoide",
+q:"Quali articolazioni sono generalmente risparmiate nell'AR?",
+a:["MCP","PIP","Polsi","DIP"],
+c:3,
+exp:"Nell'AR le interfalangee distali sono generalmente risparmiate."
+},
+{
+cat:"Reumatologia", topic:"Artrite Reumatoide",
 q:"Quale autoanticorpo è più specifico per AR?",
-a:["ANA","FR","Anti-CCP","SSA"],
+a:["ANA","Anti-CCP","Anti-dsDNA","Anti-centromero"],
+c:1,
+exp:"Gli anti-CCP hanno maggiore specificità rispetto al fattore reumatoide."
+},
+{
+cat:"Reumatologia", topic:"Artrite Reumatoide",
+q:"Il farmaco convenzionale di prima linea nell'AR è:",
+a:["Colchicina","Metotrexato","Denosumab","Idrossiclorochina sempre in monoterapia"],
+c:1,
+exp:"Il metotrexato è il DMARD convenzionale di prima linea nell'AR, salvo controindicazioni."
+},
+{
+cat:"Reumatologia", topic:"Artrite Psoriasica",
+q:"Il 'dito a salsicciotto' corrisponde a:",
+a:["Entesite","Dattilite","Pannus","Raynaud"],
+c:1,
+exp:"La dattilite è l'infiammazione globale del dito, con aspetto a salsicciotto."
+},
+{
+cat:"Reumatologia", topic:"Artrite Psoriasica",
+q:"Quale elemento è più suggestivo di AP rispetto ad AR?",
+a:["MCP simmetriche","Anti-CCP positivi","Entesite","DIP risparmiate"],
 c:2,
-exp:"Gli anti-CCP sono più specifici del FR."
+exp:"Entesite e dattilite sono lesioni cardine delle spondiloartriti, inclusa AP."
 },
 {
-q:"Quale organo ha il maggior peso prognostico nel LES?",
-a:["Cute","Rene","Articolazioni","Polmone"],
+cat:"Reumatologia", topic:"LES",
+q:"Nel LES attivo il complemento è tipicamente:",
+a:["Alto","Basso","Sempre normale","Non valutabile"],
 c:1,
-exp:"La nefrite lupica è un importante fattore prognostico."
+exp:"Il complemento si riduce per consumo da immunocomplessi."
 },
 {
-q:"Quale anticorpo è associato alla sclerosi sistemica limitata?",
-a:["Anti-Scl70","Anti-centromero","Anti-dsDNA","Anti-Sm"],
+cat:"Reumatologia", topic:"LES",
+q:"Quale organo è prognosticamente più importante nel LES?",
+a:["Cute","Rene","Articolazioni","Unghie"],
 c:1,
-exp:"Anti-centromero = forma limitata."
+exp:"Il coinvolgimento renale, soprattutto la nefrite lupica, pesa molto sulla prognosi."
 },
 {
-q:"Quale HLA è associato a Behçet?",
-a:["HLA-B27","HLA-DR4","HLA-B51","HLA-A2"],
+cat:"Reumatologia", topic:"LES",
+q:"Quale farmaco è cardine nel LES e richiede controllo oculistico?",
+a:["Idrossiclorochina","Denosumab","Colchicina","Secukinumab"],
+c:0,
+exp:"L'idrossiclorochina è centrale nel LES; la tossicità retinica impone controlli oculistici."
+},
+{
+cat:"Reumatologia", topic:"Sclerosi Sistemica",
+q:"Anti-centromero è associato soprattutto a:",
+a:["LES renale","Sclerosi sistemica limitata","AR erosiva","Behçet"],
+c:1,
+exp:"Anti-centromero è tipico della forma limitata di sclerosi sistemica."
+},
+{
+cat:"Reumatologia", topic:"Sclerosi Sistemica",
+q:"La crisi renale sclerodermica si tratta con:",
+a:["FANS","ACE-inibitori","Bisfosfonati","Colchicina"],
+c:1,
+exp:"La crisi renale sclerodermica è trattata con ACE-inibitori."
+},
+{
+cat:"Reumatologia", topic:"Behçet",
+q:"Quali vasi può colpire Behçet?",
+a:["Solo venule","Solo arterie piccole","Arterie e vene di qualsiasi calibro","Solo capillari"],
 c:2,
-exp:"Behçet è associato a HLA-B51."
+exp:"Behçet può interessare arterie e vene, di piccolo, medio e grosso calibro."
 },
 {
-q:"Qual è il sintomo tipico della PMR?",
-a:["Debolezza distale","Dolore e rigidità dei cingoli","Dattilite","Entesite"],
+cat:"Reumatologia", topic:"Behçet",
+q:"La triade classica di Behçet comprende:",
+a:["Sicca, artrite, Raynaud","Afte orali, ulcere genitali, uveite","Nefrite, rash malare, ANA","Dattilite, entesite, pitting"],
 c:1,
-exp:"PMR = dolore e rigidità dei cingoli."
+exp:"La triade classica è afte orali ricorrenti, ulcere genitali e uveite."
 },
 {
-q:"Quale farmaco costruisce osso?",
-a:["Denosumab","Alendronato","Teriparatide","Ibuprofene"],
-c:2,
-exp:"Teriparatide è un farmaco anabolizzante."
+cat:"Reumatologia", topic:"Spondilite Anchilosante",
+q:"La lombalgia infiammatoria tipicamente:",
+a:["Peggiora col riposo e migliora col movimento","Migliora col riposo","È sempre traumatica","Non dà rigidità"],
+c:0,
+exp:"La lombalgia infiammatoria migliora con movimento ed esercizio e peggiora con riposo."
 },
 {
-q:"Qual è il germe più frequente nell'osteomielite?",
-a:["E. coli","S. aureus","Pseudomonas","Klebsiella"],
+cat:"Reumatologia", topic:"Spondilite Anchilosante",
+q:"HLA-B27 nella spondilite anchilosante è:",
+a:["Diagnostico da solo","Associato ma non diagnostico","Sempre assente","Specifico al 100%"],
 c:1,
-exp:"S. aureus è il patogeno principale."
+exp:"HLA-B27 aumenta la probabilità ma non basta per fare diagnosi."
+},
+{
+cat:"Reumatologia", topic:"PMR/Horton",
+q:"Nella PMR il sintomo principale è:",
+a:["Debolezza muscolare vera","Dolore e rigidità dei cingoli","Dattilite","Ulcere genitali"],
+c:1,
+exp:"PMR dà dolore e rigidità di cingolo scapolare e pelvico, non vera debolezza muscolare."
+},
+{
+cat:"Reumatologia", topic:"PMR/Horton",
+q:"In sospetto di Horton, perché si iniziano subito corticosteroidi?",
+a:["Per ridurre il pitting ungueale","Per prevenire cecità irreversibile","Per curare la DCA","Per aumentare il complemento"],
+c:1,
+exp:"Nel sospetto di arterite di Horton non si attende la biopsia: si tratta subito per prevenire cecità."
+},
+{
+cat:"Reumatologia", topic:"Sjögren",
+q:"La complicanza oncologica classica della sindrome di Sjögren è:",
+a:["Osteosarcoma","Linfoma MALT","Melanoma","Glioblastoma"],
+c:1,
+exp:"Sjögren aumenta il rischio di linfoma non-Hodgkin, in particolare MALT."
+},
+{
+cat:"Reumatologia", topic:"Dermatomiosite",
+q:"Nella dermatomiosite il sintomo muscolare tipico è:",
+a:["Dolore distale","Debolezza prossimale","Crampi solo notturni","Paralisi flaccida acuta"],
+c:1,
+exp:"Le miopatie infiammatorie danno debolezza prossimale, ad esempio difficoltà ad alzarsi o salire le scale."
+},
+{
+cat:"Farmaci", topic:"Farmaci",
+q:"Prima di iniziare un anti-TNF bisogna escludere soprattutto:",
+a:["DCA","TB latente","Scoliosi","Osteomalacia"],
+c:1,
+exp:"Gli anti-TNF possono riattivare TB latente: serve screening con anamnesi, RX/Quantiferon secondo protocollo."
 }
 ];
 
+let selectedQuiz=[];
 let quizIndex=0;
 let quizScore=0;
+let answered=false;
 
 function quiz(){
 
+app.innerHTML=`
+<div class="card hero">
+<h1>Quiz a risposta multipla</h1>
+<p>Scegli una modalità. Le risposte corrette diventano verdi, quelle errate rosse. Ogni errore finisce nell'Error Book.</p>
+</div>
+
+<div class="card">
+<h2>Modalità</h2>
+<button class="primary" onclick="startQuiz('all')">Mix completo</button>
+<button onclick="startQuiz('Ortopedia')">Ortopedia</button>
+<button onclick="startQuiz('Reumatologia')">Reumatologia</button>
+<button onclick="startQuiz('Farmaci')">Farmaci</button>
+</div>
+
+<div class="card">
+<h2>Quiz per argomento</h2>
+${[...new Set(quizBank.map(x=>x.topic))].map(t=>`
+<button onclick="startQuizTopic('${t}')">${t}</button>
+`).join("")}
+</div>
+`;
+
+}
+
+function shuffleArray(arr){
+return arr.sort(()=>Math.random()-0.5);
+}
+
+function startQuiz(mode){
+
+if(mode==="all"){
+selectedQuiz=shuffleArray([...quizBank]);
+}else{
+selectedQuiz=shuffleArray(quizBank.filter(x=>x.cat===mode));
+}
+
 quizIndex=0;
 quizScore=0;
+answered=false;
+renderQuiz();
+
+}
+
+function startQuizTopic(topic){
+
+selectedQuiz=shuffleArray(quizBank.filter(x=>x.topic===topic));
+quizIndex=0;
+quizScore=0;
+answered=false;
 renderQuiz();
 
 }
 
 function renderQuiz(){
 
-if(quizIndex>=quizQuestions.length){
+if(selectedQuiz.length===0){
 
 app.innerHTML=`
 <div class="card">
-<h1>Quiz completato</h1>
-<h2>Punteggio: ${quizScore}/${quizQuestions.length}</h2>
-<button class="primary" onclick="quiz()">Ricomincia</button>
+<h1>Nessuna domanda</h1>
+<p>Non ci sono ancora domande in questa categoria.</p>
+<button class="primary" onclick="quiz()">Torna ai quiz</button>
 </div>
 `;
 
 return;
 }
 
-let q=quizQuestions[quizIndex];
+if(quizIndex>=selectedQuiz.length){
+
+let perc=Math.round((quizScore/selectedQuiz.length)*100);
+
+app.innerHTML=`
+<div class="card hero">
+<h1>Quiz completato</h1>
+<h2>Punteggio: ${quizScore}/${selectedQuiz.length}</h2>
+<p><b>${perc}%</b> corrette</p>
+</div>
+
+<div class="card">
+<button class="primary" onclick="quiz()">Nuovo quiz</button>
+<button onclick="go('errori')">Vai all'Error Book</button>
+</div>
+`;
+
+return;
+}
+
+let q=selectedQuiz[quizIndex];
 
 app.innerHTML=`
 <div class="card">
-<h1>Quiz</h1>
-<p>Domanda ${quizIndex+1}/${quizQuestions.length}</p>
-
+<span class="badge">${q.cat}</span>
+<span class="badge">${q.topic}</span>
+<h1>Domanda ${quizIndex+1}/${selectedQuiz.length}</h1>
 <h2>${q.q}</h2>
 
+<div id="answers">
 ${q.a.map((x,i)=>`
-<button style="display:block;width:100%;margin-bottom:8px"
+<button id="ans-${i}" style="display:block;width:100%;text-align:left;margin-bottom:8px"
 onclick="answerQuiz(${i})">
-${x}
+${String.fromCharCode(65+i)}. ${x}
 </button>
 `).join("")}
+</div>
 
+<div id="explanation"></div>
 </div>
 `;
 
@@ -882,38 +1174,46 @@ ${x}
 
 function answerQuiz(i){
 
-let q=quizQuestions[quizIndex];
+if(answered) return;
+
+answered=true;
+
+let q=selectedQuiz[quizIndex];
+
+for(let k=0;k<q.a.length;k++){
+let btn=document.getElementById("ans-"+k);
+
+if(k===q.c){
+btn.style.background="#80ed99";
+btn.style.color="#062012";
+}
+
+if(k===i && i!==q.c){
+btn.style.background="#ff6b6b";
+btn.style.color="#240808";
+}
+
+}
 
 if(i===q.c){
-
 quizScore++;
-
-app.innerHTML=`
-<div class="card">
+document.getElementById("explanation").innerHTML=`
+<div class="card ok">
 <h2>✅ Corretta</h2>
 <p>${q.exp}</p>
-<button class="primary" onclick="nextQuiz()">
-Continua
-</button>
+<button class="primary" onclick="nextQuiz()">Continua</button>
 </div>
 `;
-
 }else{
-
-addError("Quiz: "+q.q);
-
-app.innerHTML=`
-<div class="card">
+addError("Quiz - "+q.topic+": "+q.q);
+document.getElementById("explanation").innerHTML=`
+<div class="card killer">
 <h2>❌ Errata</h2>
 <p>${q.exp}</p>
 <p><b>Risposta corretta:</b> ${q.a[q.c]}</p>
-
-<button class="primary" onclick="nextQuiz()">
-Continua
-</button>
+<button class="primary" onclick="nextQuiz()">Continua</button>
 </div>
 `;
-
 }
 
 }
@@ -921,6 +1221,7 @@ Continua
 function nextQuiz(){
 
 quizIndex++;
+answered=false;
 renderQuiz();
 
 }
