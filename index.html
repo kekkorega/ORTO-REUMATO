@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Preparatore Orto-Reumato </title>
+<title>Preparatore Orto-Reumato V2</title>
 
 <style>
 :root{
@@ -423,7 +423,7 @@ if(section==="home") home();
 if(section==="manuale") manuale();
 if(section==="flash") flash();
 if(section==="prof") prof();
-mif(section==="quiz") quiz();
+if(section==="quiz") quiz();
 if(section==="algoritmi") algoritmi();
 if(section==="errori") errori();
 }
@@ -1224,6 +1224,8 @@ function nextQuiz(){
 quizIndex++;
 answered=false;
 renderQuiz();
+
+}
 const algorithms = [
 
 {
@@ -1375,8 +1377,6 @@ killer:[
 "Dire che colpisce solo le vene"
 ]
 }
-
-];
 function algoritmi(){
 
 app.innerHTML=`
@@ -1495,9 +1495,10 @@ ${a.killer.map(x=>`<li>${x}</li>`).join("")}
 <button class="red" onclick="addError('30 e lode: ${a.title}')">Segna debole</button>
 </div>
 `;
-];
-}
 
+}
+];
+  
 go("home");
 </script>
 
